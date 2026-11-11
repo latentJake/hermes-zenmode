@@ -9,13 +9,30 @@
 
 ## Install
 
+There are two ways. Pick one; don't use both on the same Hermes.
+
+### With the Hermes CLI
+
+```bash
+hermes plugins install latentJake/hermes-zenmode
+hermes plugins enable zedmode
+```
+
+`install` clones the repo into `~/.hermes/plugins/zedmode` and warns that it is a custom
+(unreviewed) source, which is expected for a plugin installed straight from GitHub. `enable` adds
+`zedmode` to `plugins.enabled` so the Python half can run. The desktop app copies the `desktop/`
+half into `~/.hermes/desktop-plugins/zedmode` by itself.
+
+### From a clone
+
 ```bash
 git clone https://github.com/latentJake/hermes-zenmode.git
 cd hermes-zenmode
 ./scripts/install.sh
 ```
 
-`install.sh` is a script you run by hand. It does four things, and nothing else:
+This links Hermes to your checkout, so edits and `git pull` show up straight away. `install.sh` is
+a script you run by hand. It does three things, and nothing else:
 
 | Step | Result |
 |---|---|
@@ -59,17 +76,23 @@ The full key list is in [keybinds.md](keybinds.md).
 
 ## Update
 
-If you installed with the default link, `git pull` is the update. The app reloads `plugin.js`
-when it changes; the backend reloads `zed_backend.py` on the next request. With `--copy`, run
+With the CLI: `hermes plugins update zedmode`.
+
+From a clone with the default link, `git pull` is the update. The app reloads `plugin.js` when it
+changes; the backend reloads `zed_backend.py` on the next request. With `--copy`, run
 `./scripts/install.sh --copy` again.
 
 ## Uninstall
+
+With the CLI: `hermes plugins remove zedmode`.
+
+From a clone:
 
 ```bash
 ./scripts/uninstall.sh
 ```
 
-This removes the two links and the skill, and takes `- zedmode` out of `plugins.enabled`
-(again saving a backup). Then **⌘K → Reload desktop plugins**. Your Hermes data is never touched.
+This removes the two links and takes `- zedmode` out of `plugins.enabled` (again saving a
+backup). Then **⌘K → Reload desktop plugins**. Your Hermes data is never touched.
 Zed Mode's own settings (tuning, presets) live in the app's plugin storage, and its card cache is
 `~/.hermes/plugin-data/zedmode/cache.db`; both are left behind harmlessly and can be deleted.

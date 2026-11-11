@@ -47,13 +47,25 @@ way to classic Hermes.
 
 ## Quick start
 
+With the Hermes CLI:
+
+```bash
+hermes plugins install latentJake/hermes-zenmode
+hermes plugins enable zedmode
+```
+
+Hermes warns that this is a custom (unreviewed) source; that is expected for anything installed
+straight from GitHub.
+
+Or from a clone, which links the plugin to your checkout so `git pull` updates it:
+
 ```bash
 git clone https://github.com/latentJake/hermes-zenmode.git
 cd hermes-zenmode
 ./scripts/install.sh
 ```
 
-Then in Hermes: **⌘K → Reload desktop plugins**, and press **⌘⌥Z**. Details, what the installer
+Then in Hermes: **⌘K → Reload desktop plugins**, and press **⌘⌥Z**. Details, what each install
 changes, and troubleshooting are in [docs/quickstart.md](docs/quickstart.md).
 
 ## Keys
@@ -96,7 +108,8 @@ fails, and what you'd see are listed in [docs/compatibility.md](docs/compatibili
 | **One private seam** | To explain *why* a model can't be used, the backend calls Hermes' own model resolver. It isn't a public API; if it changes, Zed Mode shows the gateway's short reason instead. |
 
 The desktop half is opt-in, and the Python half only runs once `zedmode` is listed under
-`plugins.enabled`. `scripts/install.sh` adds that line (with a backup); it is a script you run by hand.
+`plugins.enabled`. `hermes plugins enable zedmode` or `scripts/install.sh` adds that line; both are
+steps you run yourself.
 
 ## Known limits
 
