@@ -7,7 +7,7 @@ NM="$HERMES_HOME/hermes-agent/.build/webapp-workspace/node_modules"
 PY="$HERMES_HOME/hermes-agent/venv/bin/python"
 [ -d "$NM/react" ] || { echo "skipped: no Hermes webapp build at $NM"; exit 0; }
 
-T="${TMPDIR:-/tmp}/zen-mode-test"
+T="${TMPDIR:-/tmp}/zedmode-test"
 rm -rf "$T"; mkdir -p "$T/node_modules/@hermes/plugin-sdk" "$T/node_modules/@tanstack"
 for m in react react-dom scheduler jsdom; do ln -s "$NM/$m" "$T/node_modules/$m"; done
 ln -s "$NM/@tanstack/react-query" "$T/node_modules/@tanstack/react-query"

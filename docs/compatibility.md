@@ -14,7 +14,7 @@ If you run it on something else, treat what you see as a bug report, not a promi
 
 ## What we depend on
 
-Hermes is a moving target. This table is the honest list of what Zen Mode relies on and how firm each
+Hermes is a moving target. This table is the honest list of what Zed Mode relies on and how firm each
 piece is. The further right, the more likely a Hermes update can break it.
 
 | Documented SDK (stable) | Exported but undocumented (soft) | Not part of the SDK; read from the app's source (fragile) |
@@ -28,7 +28,7 @@ piece is. The further right, the more likely a Hermes update can break it.
 
 ## What you'd see if one breaks
 
-| If this changes | Zen Mode does | Visible? |
+| If this changes | Zed Mode does | Visible? |
 |---|---|---|
 | `plugin.js` can't load | The app keeps the previous version and shows a toast | Yes |
 | The backend isn't enabled or loaded | Pins missing (a note says so); non-live threads offer **Restart gateway** | Yes |
@@ -45,7 +45,7 @@ piece is. The further right, the more likely a Hermes update can break it.
 There is no automated canary yet. After updating Hermes, in the app:
 
 1. **⌘K → Reload desktop plugins**; no error toast.
-2. Open Zen Mode: pins appear (backend), and conversations show.
+2. Open Zed Mode: pins appear (backend), and conversations show.
 3. A chat that is **working** wears the running arc; a chat that finished while you were elsewhere
    shows as **unread**; a chat with a dev server still running shows **process running**. These
    three depend on the status dot and are the first to go quietly.

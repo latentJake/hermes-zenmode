@@ -5,8 +5,8 @@ REPO="$(cd "$(dirname "$0")/.." && pwd)"
 fail=0
 
 echo "• syntax"
-cp "$REPO/desktop/plugin.js" "${TMPDIR:-/tmp}/zen-mode-check.mjs"
-node --check "${TMPDIR:-/tmp}/zen-mode-check.mjs" && echo "  ok"
+cp "$REPO/desktop/plugin.js" "${TMPDIR:-/tmp}/zedmode-check.mjs"
+node --check "${TMPDIR:-/tmp}/zedmode-check.mjs" && echo "  ok"
 
 echo "• imports (disk plugins may only import @hermes/plugin-sdk, react, react/jsx-runtime)"
 bad=$(grep -E "^import .* from ['\"]" "$REPO/desktop/plugin.js" | grep -vE "from ['\"](@hermes/plugin-sdk|react|react/jsx-runtime)['\"]" || true)
@@ -17,7 +17,7 @@ hex=$(grep -nE "#[0-9a-fA-F]{3,8}\b|rgb\(|rgba\(" "$REPO/desktop/plugin.js" || t
 if [ -n "$hex" ]; then echo "  ✗ $hex"; fail=1; else echo "  ok"; fi
 
 echo "• id matches folder name used by install.sh"
-grep -q "const ID = 'zen-mode'" "$REPO/desktop/plugin.js" && echo "  ok" || { echo "  ✗ id changed"; fail=1; }
+grep -q "const ID = 'zedmode'" "$REPO/desktop/plugin.js" && echo "  ok" || { echo "  ✗ id changed"; fail=1; }
 
 echo "• backend /zed runs against your real state.db"
 AGENT="${HERMES_HOME:-$HOME/.hermes}/hermes-agent"

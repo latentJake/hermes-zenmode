@@ -51,7 +51,7 @@ const type = async (ta, value) => {
   })
 }
 const refetchLive = async () => {
-  await act(async () => sdk.queryClient.invalidateQueries({ queryKey: ['zen-mode', 'live'] }))
+  await act(async () => sdk.queryClient.invalidateQueries({ queryKey: ['zedmode', 'live'] }))
   await tick()
   await tick()
 }
@@ -60,7 +60,7 @@ const refetchLive = async () => {
 const contribs = new Map()
 let restMode = 'ok'
 const ctx = {
-  source: 'plugin:zen-mode',
+  source: 'plugin:zedmode',
   register(c) {
     const k = `${c.area}:${c.id}`
     contribs.set(k, c)
@@ -191,8 +191,8 @@ console.log('⌘⌥Z opens ONE stack; clean slate = your pins first')
 sdk.host.state.focusedStoredSessionId.set(main)
 contribs.get(toolKey).data.onSelect()
 await tick()
-ok(contribs.get(toolKey).data.active === true, 'toggle active inside Zen Mode')
-const page = [...contribs.values()].find(c => c.data?.path === '/zen-mode' && c.render)
+ok(contribs.get(toolKey).data.active === true, 'toggle active inside Zed Mode')
+const page = [...contribs.values()].find(c => c.data?.path === '/zedmode' && c.render)
 const mount = document.createElement('div')
 document.body.appendChild(mount)
 let root = createRoot(mount)
@@ -415,16 +415,16 @@ sdk.calls.length = 0
   const mp = float().querySelector('.hstk-model')
   ok(mp?.tagName === 'BUTTON' && mp.classList.contains('open') && !mp.classList.contains('ghost') && /isn’t live/.test(mp.title), 'not live: the model pill is a real button that says why there is no menu here')
   await act(async () => mp.dispatchEvent(new w.MouseEvent("click", { bubbles: true, metaKey: true })))
-  ok(sdk.calls.some(c => c[0] === 'openSession' && c[1] === main && c[2]?.intent === 'tab'), 'clicking it opens that chat in Hermes, where the model can be changed (⌘-click: a new tab, Zen Mode stays)')
+  ok(sdk.calls.some(c => c[0] === 'openSession' && c[1] === main && c[2]?.intent === 'tab'), 'clicking it opens that chat in Hermes, where the model can be changed (⌘-click: a new tab, Zed Mode stays)')
   sdk.calls.length = 0
 }
 await key('i')
 ok(document.activeElement === float().querySelector('.hstk-comp textarea'), '"i" puts the caret in the composer')
-await type(float().querySelector('textarea'), 'hello from Zen Mode')
+await type(float().querySelector('textarea'), 'hello from Zed Mode')
 await key('Enter', {}, float().querySelector('textarea'))
 await wait(800)
 ok(called('composer.submit', main), 'tries the session’s own composer first')
-ok(!called('openSession') && float().querySelector('textarea').value === 'hello from Zen Mode', 'not live → ⏎ does NOT open another view; your text stays in the box')
+ok(!called('openSession') && float().querySelector('textarea').value === 'hello from Zed Mode', 'not live → ⏎ does NOT open another view; your text stays in the box')
 ok(float().querySelector('.hstk-cnote')?.textContent.includes('isn’t live'), 'and it says why')
 await click($$('.hstk-comp button').find(b => b.textContent === 'Open in Hermes & send'))
 await wait(800)
@@ -458,7 +458,7 @@ await key('Escape')
 await wait(620)
 ok(float() === null && $('.hstk').dataset.view === 'stack', 'esc again: just the stack')
 
-console.log('a narrow pane (Zen Mode beside an editor): the held thread fills it, and follows resizes')
+console.log('a narrow pane (Zed Mode beside an editor): the held thread fills it, and follows resizes')
 const resized = async (wpx, hpx) => {
   const el = $('.hstk-home')
   Object.defineProperty(el, 'clientWidth', { value: wpx, configurable: true })
@@ -600,7 +600,7 @@ await click(live[0])
 await tick()
 const bc = req('session.branch')[0]?.[2]
 ok(bc?.session_id === 'rt-b' && Number.isInteger(bc?.through_message_id) && bc.through_message_id >= 1000, 'a prompt → session.branch { live id, through_message_id } (the native boundary)')
-ok(!called('openSession') && sdk.calls.some(c => c[0] === 'notify' && /Branched from that prompt/.test(c[1].message)), 'the new branch comes up in Zen Mode, not in the classic tab, and says so')
+ok(!called('openSession') && sdk.calls.some(c => c[0] === 'notify' && /Branched from that prompt/.test(c[1].message)), 'the new branch comes up in Zed Mode, not in the classic tab, and says so')
 await wait(80)
 ok(float()?.dataset.open === '1', 'the held thread is now the branch')
 await putBack()
@@ -650,17 +650,17 @@ ok(frontId() === main, 'clicking a card further back brings it to the front')
 await focusRoot()
 await key('r')
 ok($('.hstk-titlebox')?.value === titleFor(main), 'r on a live chat turns its title into a box')
-await type($('.hstk-titlebox'), 'Renamed in Zen Mode')
+await type($('.hstk-titlebox'), 'Renamed in Zed Mode')
 sdk.calls.length = 0
 await key('Enter', {}, $('.hstk-titlebox'))
 await tick()
-ok(req('session.title').some(c => c[2].session_id === 'rt-main' && c[2].title === 'Renamed in Zen Mode'), '⏎ renames it through the gateway (session.title on the live session)')
-ok(!$('.hstk-titlebox') && card(main).querySelector('.hstk-title').textContent === 'Renamed in Zen Mode' && card(main).querySelector('.hstk-chrome .lab').textContent === 'Renamed in Zen Mode', 'the card shows the new name')
+ok(req('session.title').some(c => c[2].session_id === 'rt-main' && c[2].title === 'Renamed in Zed Mode'), '⏎ renames it through the gateway (session.title on the live session)')
+ok(!$('.hstk-titlebox') && card(main).querySelector('.hstk-title').textContent === 'Renamed in Zed Mode' && card(main).querySelector('.hstk-chrome .lab').textContent === 'Renamed in Zed Mode', 'the card shows the new name')
 ok(card(main).querySelector('.hstk-rename') !== null, 'there’s a pencil on the front card too')
 await click(card(main))
 await tick()
 await tick()
-ok(split() && $('.hstk-crumbs .cur')?.textContent === 'Renamed in Zen Mode', 'clicking the front card holds it')
+ok(split() && $('.hstk-crumbs .cur')?.textContent === 'Renamed in Zed Mode', 'clicking the front card holds it')
 ok(tv()?.querySelector('.hstk-cbox.ring-class') && tv()?.querySelector('.backing-class'), 'composer wears the app’s composerSurfaceRing + composerInputBacking')
 const ccss = $('style').textContent
 ok(/\.hstk-cbox textarea\{[^}]*width:100%[^}]*text-align:left/.test(ccss) && /\.hstk-paper \.hstk-comp textarea\{min-height:56px\}/.test(ccss), 'the text box fills the composer in every mode (it used to shrink and centre in PAPER)')
@@ -886,11 +886,11 @@ if (diffEls().length) {
 }
 await putBack()
 
-console.log('Zen Mode tuning panel: dials, presets, codes')
+console.log('Zed Mode tuning panel: dials, presets, codes')
 await focusRoot()
 await key('`')
 ok($('.hstk-tune') !== null, '` opens the tuning panel')
-ok($('.hstk').style.getPropertyValue('--hz-lift') === '34', 'the Zen Mode root carries the dials as --hz-* variables')
+ok($('.hstk').style.getPropertyValue('--hz-lift') === '34', 'the Zed Mode root carries the dials as --hz-* variables')
 const slider = k => $(`.hstk-tune input[data-key="${k}"]`)
 const setRange = async (el, v) => {
   const setter = Object.getOwnPropertyDescriptor(w.HTMLInputElement.prototype, 'value').set
@@ -946,10 +946,10 @@ await click($$('.hstk-tune button').find(b => b.textContent === 'Apply'))
 ok($('.hstk').style.getPropertyValue('--hz-lift') === '80' && $('.hstk').style.getPropertyValue('--hz-cardZ') === '200', 'pasting the code restores the exact dials')
 await type($$('.hstk-tune .txt')[1], 'nonsense')
 await click($$('.hstk-tune button').find(b => b.textContent === 'Apply'))
-ok($('.hstk-tune .msg')?.textContent.includes('isn’t a Zen Mode code') && $('.hstk').style.getPropertyValue('--hz-lift') === '80', 'a bad code is rejected without changing anything')
+ok($('.hstk-tune .msg')?.textContent.includes('isn’t a Zed Mode code') && $('.hstk').style.getPropertyValue('--hz-lift') === '80', 'a bad code is rejected without changing anything')
 await click($$('.hstk-tune button').find(b => b.textContent === 'Reset all'))
 const sp = contribs.get('settings:zed')
-ok(sp?.title === 'Zen Mode' && typeof sp.render === 'function', 'same panel registered as Settings → Plugins → Zen Mode')
+ok(sp?.title === 'Zed Mode' && typeof sp.render === 'function', 'same panel registered as Settings → Plugins → Zed Mode')
 await focusRoot()
 await key('`')
 ok($('.hstk-tune') === null, '` closes it')
@@ -959,8 +959,8 @@ const lcss = $('style').textContent
 ok(/\.hstk-body\{flex:1;[^}]*mask-image:linear-gradient\(to bottom, black calc\(100% - 70px\), transparent calc\(100% - 40px\)\)/.test(lcss), 'the card’s text fades out above the bottom row instead of running under it')
 ok(/\.hstk-meta > \*\{flex:none\}/.test(lcss) && /\.hstk-meta\{[^}]*mask-image:linear-gradient\(to right/.test(lcss) && !/\.hstk-pill\.fact\{[^}]*text-overflow/.test(lcss), 'pills keep their full text; the row fades at its right edge instead of crushing them')
 
-console.log('entering and leaving Zen Mode: a short transition, then the app goes where you asked')
-ok(/\.hstk\[data-view\]:not\(\.inline\)\{animation:hstk-zed-in calc\(var\(--hz-zedMs,450\) \* 1ms\)/.test(lcss) && $('.hstk').style.getPropertyValue('--hz-zedMs') === '450', 'Zen Mode eases in when it opens (450 ms, a dial, under a second)')
+console.log('entering and leaving Zed Mode: a short transition, then the app goes where you asked')
+ok(/\.hstk\[data-view\]:not\(\.inline\)\{animation:hstk-zed-in calc\(var\(--hz-zedMs,450\) \* 1ms\)/.test(lcss) && $('.hstk').style.getPropertyValue('--hz-zedMs') === '450', 'Zed Mode eases in when it opens (450 ms, a dial, under a second)')
 motion.reduce = false
 await focusRoot()
 sdk.calls.length = 0
@@ -972,10 +972,10 @@ await dbl()
 await wait(420)
 ok(sdk.calls.filter(c => c[0] === 'openSession').length === 1 && called('openSession', going), '…then the chat opens, once, even if you trigger it again meanwhile')
 await wait(320)
-ok(!('leaving' in $('.hstk').dataset), 'if Zen Mode is still on screen afterwards, it comes back into view')
+ok(!('leaving' in $('.hstk').dataset), 'if Zed Mode is still on screen afterwards, it comes back into view')
 sdk.calls.length = 0
 {
-  console.log('new chat, without leaving Zen Mode')
+  console.log('new chat, without leaving Zed Mode')
   const nb = () => $('.hstk-bar .hstk-new')
   ok(nb()?.tagName === 'BUTTON' && $('.hstk-bar').firstElementChild.contains(nb()) && nb().getAttribute('aria-label') === 'New chat', 'a round New chat button sits first in the bar (top left)')
   sdk.createFail.on = true
@@ -997,7 +997,7 @@ sdk.calls.length = 0
   await click(pickRow)
   await wait(500)
   const cr = req('session.create')[0]?.[2]
-  ok(cr && (cr.cwd || '') === wantCwd && !called('newChat') && !called('openSession') && !('leaving' in $('.hstk').dataset), `picking one → session.create${wantCwd ? ' in that folder' : ''}; Zen Mode stays (no classic tab, no navigation)`)
+  ok(cr && (cr.cwd || '') === wantCwd && !called('newChat') && !called('openSession') && !('leaving' in $('.hstk').dataset), `picking one → session.create${wantCwd ? ' in that folder' : ''}; Zed Mode stays (no classic tab, no navigation)`)
   ok(split() && float()?.textContent.includes('New chat') && frontId() === 'new-1', 'the new chat comes up beside the stack, as a card called "New chat" before its first prompt')
   ok(document.activeElement === float().querySelector('.hstk-comp textarea'), 'the caret is in its composer')
   sdk.calls.length = 0
@@ -1012,23 +1012,23 @@ sdk.calls.length = 0
   sdk.calls.length = 0
 }
 await act(async () => $('.hstk-card.sel').dispatchEvent(new w.MouseEvent('dblclick', { bubbles: true, metaKey: true })))
-ok(sdk.calls.some(c => c[0] === 'openSession' && c[2]?.intent === 'tab') && !('leaving' in $('.hstk').dataset), '⌘-open (a new tab) is immediate: Zen Mode stays')
+ok(sdk.calls.some(c => c[0] === 'openSession' && c[2]?.intent === 'tab') && !('leaving' in $('.hstk').dataset), '⌘-open (a new tab) is immediate: Zed Mode stays')
 sdk.calls.length = 0
 await focusRoot()
 await key('Escape')
-ok(!called('navigate') && $('.hstk').dataset.leaving === 'exit', 'esc: Zen Mode settles back first…')
+ok(!called('navigate') && $('.hstk').dataset.leaving === 'exit', 'esc: Zed Mode settles back first…')
 await wait(420)
 ok(called('navigate', '/'), '…then you are back where you were')
 motion.reduce = true
 
 console.log('leaving and coming back')
 await act(async () => root.unmount())
-window.location.hash = '#/zen-mode'
+window.location.hash = '#/zedmode'
 root = createRoot(mount)
 await act(async () => root.render(page.render()))
 await tick()
 await tick()
-ok(frontId() === F && !float(), 'Zen Mode always reopens on the front of the stack (most urgent first), nothing held')
+ok(frontId() === F && !float(), 'Zed Mode always reopens on the front of the stack (most urgent first), nothing held')
 await act(async () => root.unmount())
 
 console.log('backend not loaded / backend error')
@@ -1151,12 +1151,12 @@ await act(async () => root.unmount())
 sdk.live.sessions = []
 
 console.log('inline directive')
-const dir = [...contribs.values()].find(c => c.data?.name === 'zen-mode')
+const dir = [...contribs.values()].find(c => c.data?.name === 'zedmode')
 root = createRoot(mount)
 await act(async () => root.render(createElement(() => dir.data.render({ attrs: {} }))))
 await tick()
 await tick()
-ok($('.hstk.inline')?.dataset.view === 'stack' && $$('.hstk-stage').length === 1 && count() === TOTAL && !$('.hstk-grip'), '::zen-mode{} renders the stack inline (no grip)')
+ok($('.hstk.inline')?.dataset.view === 'stack' && $$('.hstk-stage').length === 1 && count() === TOTAL && !$('.hstk-grip'), '::zedmode{} renders the stack inline (no grip)')
 sdk.calls.length = 0
 await key('Enter', { shiftKey: true })
 await tick()

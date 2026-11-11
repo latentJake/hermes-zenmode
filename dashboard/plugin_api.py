@@ -1,7 +1,7 @@
-"""Zen Mode backend, mounted by the gateway at /api/plugins/zen-mode/.
+"""Zed Mode backend, mounted by the gateway at /api/plugins/zedmode/.
 
 This file is deliberately tiny and stable. The gateway imports it ONCE (on the first request
-after `zen-mode` is in `plugins.enabled`) and keeps that router until it restarts. So all
+after `zedmode` is in `plugins.enabled`) and keeps that router until it restarts. So all
 the logic lives in `zed_backend.py`, which this dispatcher re-imports whenever the file
 changes: edit the backend, save, and the next request runs the new code. No restart.
 
@@ -24,7 +24,7 @@ _cache: dict = {"mod": None, "mtime": None}
 def _impl():
     mtime = _IMPL.stat().st_mtime
     if _cache["mod"] is None or mtime != _cache["mtime"]:
-        spec = importlib.util.spec_from_file_location("zen_mode_backend", _IMPL)
+        spec = importlib.util.spec_from_file_location("zedmode_backend", _IMPL)
         assert spec is not None and spec.loader is not None
         mod = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(mod)

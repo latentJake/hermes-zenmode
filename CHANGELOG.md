@@ -9,9 +9,9 @@ Dates are 2026. "Verified" means checked by the automated suite unless it says i
 
 ## 0.19.0: early beta (Nov 11)
 
-- **New chat without leaving Zen Mode.** The round **+** asks where (the open workspace, a folder you've
+- **New chat without leaving Zed Mode.** The round **+** asks where (the open workspace, a folder you've
   worked in, or none), creates the chat through the gateway call the app itself uses, and brings it
-  up beside the stack with the caret in its composer. If the gateway refuses, Zen Mode says so and opens
+  up beside the stack with the caret in its composer. If the gateway refuses, Zed Mode says so and opens
   the app's own New session instead.
 - Catalog manifest (`plugin.yaml`) and MIT licence added.
 - Seen in the app (sandboxed Hermes, real gateway): picking a folder made a live chat held beside
@@ -19,11 +19,11 @@ Dates are 2026. "Verified" means checked by the automated suite unless it says i
 
 ## 0.18: ⏎ is for typing, branching (Nov 11)
 
-- **Plain ⏎ no longer opens anything** in Zen Mode. **Open** (or a double-click) opens a chat in classic
+- **Plain ⏎ no longer opens anything** in Zed Mode. **Open** (or a double-click) opens a chat in classic
   Hermes; **⌘⏎** opens it in a new tab.
 - Sending in a chat that **isn't live** keeps your text and says why, instead of throwing you into
   another view. **Open in Hermes & send** does it on request.
-- **Branch** a conversation without leaving Zen Mode: the header button copies the whole chat; the icon
+- **Branch** a conversation without leaving Zed Mode: the header button copies the whole chat; the icon
   on a prompt (live chats) copies everything up to that prompt's answer. Same calls as Hermes' own
   branch.
 
@@ -38,7 +38,7 @@ Dates are 2026. "Verified" means checked by the automated suite unless it says i
   can't resolve are left out and named in the footer.
 - **A held thread fills the pane** when brought to the foreground, and in any pane narrower than a
   threshold (dial), following live resizes.
-- **Entering and leaving Zen Mode is a short transition** (a dial; instant with reduced motion). A card's
+- **Entering and leaving Zed Mode is a short transition** (a dial; instant with reduced motion). A card's
   prompt list fades above its bottom row instead of running under it.
 
 ## 0.15: answer on the card (Nov 11)
@@ -58,12 +58,12 @@ Dates are 2026. "Verified" means checked by the automated suite unless it says i
 
 ## 0.10 to 0.13: one inbox-ordered stack (Nov 10)
 
-- **Zen Mode is one stack**, ordered by what needs you: failed, needs you, working, process running,
+- **Zed Mode is one stack**, ordered by what needs you: failed, needs you, working, process running,
   unread, pinned, the rest. State comes from the app's own status dot, so it agrees with the sidebar.
 - **⇧⏎ holds** a card: the stack steps aside and the conversation floats in beside it. ⇧⏎ again
   brings it to the foreground; Esc steps back a level at a time.
 - The composer's **+** menu is the native one (Files, Folder, Images, Paste image, URL, snippets).
-  Images sent from Zen Mode now reach the model.
+  Images sent from Zed Mode now reach the model.
 - The stack curves up past a certain card so a long history reads the same as a short one; it can
   be placed by dragging a grip; scrolling follows the gesture; cards show the latest prompts and
   what the session made; **r** renames a live chat.
@@ -73,7 +73,7 @@ Dates are 2026. "Verified" means checked by the automated suite unless it says i
 
 - Edits show as compact diff cards in your theme's colours.
 - **The tuning panel** (`` ` ``): live dials, presets and shareable `zed1.…` codes, also under
-  Settings → Plugins → Zen Mode.
+  Settings → Plugins → Zed Mode.
 - Fixes: every backend call returned 400 after the app began adding `?profile=…` to plugin
   requests; a crash in the old TURNS view.
 

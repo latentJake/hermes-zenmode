@@ -1,7 +1,7 @@
 {
-  "name": "zen-mode",
-  "label": "Zen Mode",
-  "description": "Backend for the Zen Mode desktop plugin: pins and stored transcripts from state.db",
+  "name": "zedmode",
+  "label": "Zed Mode",
+  "description": "Backend for the Zed Mode desktop plugin: pins and stored transcripts from state.db",
   "version": "0.19.0",
   "tab": { "hidden": true },
   "api": "plugin_api.py"

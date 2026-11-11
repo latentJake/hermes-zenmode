@@ -1,5 +1,5 @@
 /**
- * Zen Mode.
+ * Zed Mode.
  *
  * ⌘⌥Z opens ONE stack of your conversations, receding into the screen,
  * ordered like an inbox. Front to back:
@@ -23,7 +23,7 @@
  * stack; it can never be dragged under the thread.
  *
  * Where states come from: the app's own SessionStatusDot (needs-input / working / stalled /
- * background / unread), so Zen Mode agrees with the sidebar; "failed" from the gateway's turn events.
+ * background / unread), so Zed Mode agrees with the sidebar; "failed" from the gateway's turn events.
  *
  * Keys (outside text fields):
  *   ↑↓ walk the stack (↑ deeper) · ⌘⏎ open natively · ⇧⏎ hold, ⇧⏎ again foreground · i write · esc back one level
@@ -64,15 +64,15 @@ import {
 import { Component, memo as pure, useCallback, useEffect, useRef, useState, useSyncExternalStore } from 'react'
 import { jsx, jsxs } from 'react/jsx-runtime'
 
-const ID = 'zen-mode' // must equal the folder name under desktop-plugins/
-const ROUTE = '/zen-mode'
+const ID = 'zedmode' // must equal the folder name under desktop-plugins/
+const ROUTE = '/zedmode'
 const TITLEBAR_TOOLS_RIGHT = 'titleBar.tools.right' // native titlebar buttons, left of Settings/Layout/HUD
 
 let CTX = null // set in register(); used for ctx.rest / ctx.os
-const zedApi = { hold: null } // set by the mounted Zen Mode view: bring a session up beside the stack
+const zedApi = { hold: null } // set by the mounted Zed Mode view: bring a session up beside the stack
 
 // ── TUNE: every feel-dial in one place ──────
-// Values live here, persist in ctx.storage, drive CSS through --hz-* variables on the Zen Mode root
+// Values live here, persist in ctx.storage, drive CSS through --hz-* variables on the Zed Mode root
 // (and a few JS readers), and can be saved as presets or shared as a "zed1.…" code.
 const TUNE = [
   { key: 'paper', group: 'Experimental', label: 'PAPER thread toggle', min: 0, max: 1, step: 1, def: 0, unit: '' },
@@ -146,7 +146,7 @@ function decodeTune(code) {
   const raw = String(code || '').trim()
   const body = raw.startsWith('zed1.') ? raw.slice(5) : raw
   const parsed = JSON.parse(raw.startsWith('{') ? raw : decodeURIComponent(escape(atob(body))))
-  if (!parsed || typeof parsed !== 'object') throw new Error('not a Zen Mode code')
+  if (!parsed || typeof parsed !== 'object') throw new Error('not a Zed Mode code')
   return Object.fromEntries(Object.entries(parsed).filter(([k, v]) => clampTune(k, v) !== undefined))
 }
 const userPresets = () => CTX?.storage?.get?.('presets', {}) || {}
@@ -187,7 +187,7 @@ function TunePanel({ embedded = false, onClose }) {
     className: 'hstk-tune' + (embedded ? ' embedded' : ''),
     onKeyDown: e => e.stopPropagation(),
     children: [
-      jsxs('div', { className: 'hd', children: [jsx('b', { children: 'Zen Mode tuning' }, 'b'), jsx('span', { className: 'sp' }, 'sp'), !embedded && btn('✕', onClose, { title: 'Close (`)', key: 'x' })] }, 'hd'),
+      jsxs('div', { className: 'hd', children: [jsx('b', { children: 'Zed Mode tuning' }, 'b'), jsx('span', { className: 'sp' }, 'sp'), !embedded && btn('✕', onClose, { title: 'Close (`)', key: 'x' })] }, 'hd'),
       jsxs(
         'div',
         {
@@ -277,28 +277,28 @@ function TunePanel({ embedded = false, onClose }) {
                 setCode('')
                 say('Code applied')
               } catch {
-                say('That isn’t a Zen Mode code')
+                say('That isn’t a Zed Mode code')
               }
             }, { key: 'a' })
           ]
         },
         'import'
       ),
-      jsx('div', { className: 'msg', children: msg || (embedded ? 'Changes apply live in Zen Mode.' : 'Double-click a value to reset it · ` closes') }, 'msg')
+      jsx('div', { className: 'msg', children: msg || (embedded ? 'Changes apply live in Zed Mode.' : 'Double-click a value to reset it · ` closes') }, 'msg')
     ]
   })
 }
 
 
-// Zen Mode always opens on the front of the stack; only the thread style is remembered.
+// Zed Mode always opens on the front of the stack; only the thread style is remembered.
 const memo = { threadMode: 'flat' }
 
 // ── enter / exit ────────────────────────────────────────────────────────────
 let returnTo = '/'
 const inZed = () => (window.location.hash || '').startsWith('#' + ROUTE)
-// Leaving Zen Mode (esc / Exit, or ⏎ into a native chat): the stack eases out first, then the app goes
+// Leaving Zed Mode (esc / Exit, or ⏎ into a native chat): the stack eases out first, then the app goes
 // where you asked. `how` picks the direction: 'exit' settles back, 'open' moves through into the chat.
-// Instant when the dial is 0, under reduced motion, or when there is no Zen Mode page on screen.
+// Instant when the dial is 0, under reduced motion, or when there is no Zed Mode page on screen.
 const calm = () => {
   try {
     return Boolean(window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches)
@@ -350,11 +350,11 @@ const oneLine = (s, n = 90) => {
 
 const openSession = (id, e) => {
   haptic('tap')
-  if (e?.metaKey) return host.openSession(id, { intent: 'tab' }) // a new tab: Zen Mode stays where it is
+  if (e?.metaKey) return host.openSession(id, { intent: 'tab' }) // a new tab: Zed Mode stays where it is
   leaveThen('open', () => host.openSession(id, { intent: 'in-place' }))
 }
 
-// Send from Zen Mode.
+// Send from Zed Mode.
 //   Images are staged on the LIVE session first (image.attach_bytes), so a send that carries
 //   them goes straight to the gateway on that same session and names the staged paths, exactly
 //   as the native composer does. (Handing such a send to the chat's own composer lost them.)
@@ -378,10 +378,10 @@ async function sendPrompt(storedId, liveId, text, images = [], { openIfNeeded = 
   return 'opened'
 }
 
-// A fresh chat, without leaving Zen Mode. The same gateway call the app makes for a new chat
+// A fresh chat, without leaving Zed Mode. The same gateway call the app makes for a new chat
 // (`session.create`, optionally in a folder); the answer names the new session and it comes up
 // beside the stack with the caret in its composer. The gateway keeps an empty chat out of the
-// session list until its first prompt (no "Untitled" litter), so Zen Mode remembers the ones it started
+// session list until its first prompt (no "Untitled" litter), so Zed Mode remembers the ones it started
 // and shows them as cards meanwhile. If the gateway refuses, the app's own New session opens.
 const zedDrafts = new Map() // stored id → { cwd, at }
 let startingChat = false
@@ -426,7 +426,7 @@ function NewChatButton({ folders }) {
     { key: 'none', cwd: '', label: 'No folder', hint: '' }
   ].filter(Boolean)
   const button = extra =>
-    jsx('button', { type: 'button', className: 'hstk-new', title: 'New chat, here in Zen Mode', 'aria-label': 'New chat', ...extra, children: Icon('add') })
+    jsx('button', { type: 'button', className: 'hstk-new', title: 'New chat, here in Zed Mode', 'aria-label': 'New chat', ...extra, children: Icon('add') })
   if (places.length < 2 || typeof DropdownMenu !== 'function' || typeof DropdownMenuItem !== 'function') return button({ onClick: () => newChat(places[0].cwd) })
   return jsxs(DropdownMenu, {
     open,
@@ -623,7 +623,7 @@ const NoFeed = ({ loading, error }) => {
       : missing
         ? jsxs('div', {
             children: [
-              jsx('div', { children: 'This chat isn’t live, and its stored transcript comes from the Zen Mode backend, which the running gateway hasn’t loaded yet.' }, 'a'),
+              jsx('div', { children: 'This chat isn’t live, and its stored transcript comes from the Zed Mode backend, which the running gateway hasn’t loaded yet.' }, 'a'),
               jsx('div', { style: { marginTop: 8 }, children: 'One gateway restart fixes it for good (later backend changes reload by themselves). It interrupts chats that are mid-reply.' }, 'b'),
               jsx('button', { className: 'hstk-x primary', style: { marginTop: 10 }, onClick: () => host.restartGateway?.(), children: 'Restart gateway' }, 'c')
             ]
@@ -639,7 +639,7 @@ const NoFeed = ({ loading, error }) => {
 }
 
 // ── attention: the states the stack is ordered by ───────────────────────────
-// Native states come from the app's own SessionStatusDot (see DotProbe), so Zen Mode can never
+// Native states come from the app's own SessionStatusDot (see DotProbe), so Zed Mode can never
 // disagree with the sidebar. "Failed" has no native state: it comes from the gateway's event
 // stream (a turn that completed with status "error"), and clears when that session starts again.
 const STATES = [
@@ -977,7 +977,7 @@ const CSS = `
 .hstk-paper .hstk-comp textarea{min-height:56px}
 /* containment: long words, code, tables and images wrap or scroll inside their own box */
 .hstk{min-width:0;overflow-x:hidden}
-/* entering and leaving Zen Mode */
+/* entering and leaving Zed Mode */
 @keyframes hstk-zed-in{from{opacity:0;transform:scale(.965)}}
 .hstk[data-view]:not(.inline){animation:hstk-zed-in calc(var(--hz-zedMs,450) * 1ms) cubic-bezier(.2,.8,.2,1);
   transition:opacity calc(var(--hz-zedMs,450) * .8ms) ease,transform calc(var(--hz-zedMs,450) * .8ms) cubic-bezier(.4,0,.2,1)}
@@ -1015,7 +1015,7 @@ const CSS = `
 .hstk-dlines .dl.gap{height:8px;border-top:1px dashed var(--ui-stroke-tertiary, var(--ui-stroke-secondary));margin-top:4px}
 .hstk-pfold .leaf.edits{animation:none}
 
-/* Zen Mode tuning panel (dev) — also embedded in Settings → Plugins → Zen Mode */
+/* Zed Mode tuning panel (dev) — also embedded in Settings → Plugins → Zed Mode */
 .hstk-tune{position:absolute;top:44px;right:14px;z-index:60;width:300px;max-height:calc(100% - 60px);overflow:auto;padding:10px 12px;border-radius:12px;
   background:var(--ui-bg-elevated);border:1px solid var(--ui-stroke-secondary);box-shadow:0 20px 50px -18px color-mix(in oklab, var(--ui-text-primary) 45%, transparent);
   font-size:11.5px;color:var(--ui-text-secondary)}
@@ -1344,7 +1344,7 @@ function useThread({ storedId, liveId, status, registerApi }) {
     setCur(Math.max(0, turns.length - 1))
   }
 
-  // Let Zen Mode drive this thread from the keyboard (↑↓ chapters, i to write).
+  // Let Zed Mode drive this thread from the keyboard (↑↓ chapters, i to write).
   //   ↓ on the last prompt → the end of the reply.  ↑ when you've scrolled into a chapter → its prompt.
   useEffect(() => {
     registerApi?.({
@@ -1413,15 +1413,15 @@ function Rail({ turns, first, cur, jump }) {
 }
 
 // ── Model selection, the native protocol ────────────────────────────────────
-// What the native composer pill does (use-model-controls.ts), reproduced for a Zen Mode composer:
+// What the native composer pill does (use-model-controls.ts), reproduced for a Zed Mode composer:
 //   1. paint the pick at once (pending), keeping a snapshot to roll back to
 //   2. `config.set model "<model> --provider <p> --session"`: the app's transport turns this into
 //      the owner's canonical `session.mutate operation=model` (always session-scoped: a pick in
-//      Zen Mode never rewrites the profile default)
+//      Zed Mode never rewrites the profile default)
 //   3. `confirm_required` (a guarded / expensive target) → roll back, ask with the owner's own
 //      message, resend with `confirm_expensive_model: true` only if you accept
 //   4. `deferred` (picked mid-turn) → "applies after this turn"; session.info confirms it later
-//   5. failure → roll back and say WHY. The owner only answers `model_resolution_failed`, so Zen Mode
+//   5. failure → roll back and say WHY. The owner only answers `model_resolution_failed`, so Zed Mode
 //      asks its backend to run the same resolver (`/resolve`) for the real reason.
 //   6. `session.info` from the gateway is the truth: it confirms a pick, or corrects the label.
 // State is per live session and shared, so a tile, its dive and a held thread agree.
@@ -1548,7 +1548,7 @@ function ModelPill({ liveId, storedId, info, storedModel }) {
 
   // Not live: the gateway holds no session to switch, so there is no menu to offer here. The pill
   // is still a button, and an honest one: it opens the chat in Hermes (what ⏎ does), where the
-  // model can be changed. ⌘-click opens it in a new tab and leaves Zen Mode where it is.
+  // model can be changed. ⌘-click opens it in a new tab and leaves Zed Mode where it is.
   if (!liveId && storedId)
     return jsxs('button', {
       type: 'button',
@@ -2589,7 +2589,7 @@ const renderCard = (c, { r = 0, grip, edit } = {}) => {
 }
 
 // The native status dots, rendered once per session out of sight and read back: the one place
-// Zen Mode learns needs-input / working / stalled / background / unread, exactly as the sidebar shows them.
+// Zed Mode learns needs-input / working / stalled / background / unread, exactly as the sidebar shows them.
 function DotProbe({ ids }) {
   const box = useRef(null)
   const sig = ids.join('|')
@@ -2618,7 +2618,7 @@ function DotProbe({ ids }) {
   return jsx('div', { ref: box, hidden: true, 'aria-hidden': true, children: ids.map(id => jsx('span', { 'data-id': id, children: NativeDot(id) }, id)) })
 }
 
-// ── Zen Mode ─────────────────────────────────────────────────────────────────────
+// ── Zed Mode ─────────────────────────────────────────────────────────────────────
 // "After the next paint", on a timer: animation frames don't fire while the window is in the
 // background, and a held thread must never be left waiting for one.
 const raf2 = fn => setTimeout(fn, 34)
@@ -2628,7 +2628,7 @@ function ZedView({ inline = false }) {
   useAttention() // …and when a session's state changes
   const [selId, setSelId] = useState(null) // null = the front card, whatever it is right now
   const [held, setHeld] = useState(null) // { id, open, full }: the thread on the right; full = brought to the foreground
-  const [box, setBox] = useState({ w: 1440, h: 900 }) // the Zen Mode area, for placing the stack
+  const [box, setBox] = useState({ w: 1440, h: 900 }) // the Zed Mode area, for placing the stack
   const [arranging, setArranging] = useState(false)
   const [renaming, setRenaming] = useState(null) // { id, text }
   const [titles, setTitles] = useState({}) // names you just gave, until the lists catch up
@@ -2675,7 +2675,7 @@ function ZedView({ inline = false }) {
     if (r) byId.set(id, { ...r, title: r.title || l.title, last: Math.max(r.last || 0, l.last_active || 0) })
     else if (l.message_count > 0 || (l.status && l.status !== 'idle')) byId.set(id, { id, title: l.title || '', preview: l.preview || '', message_count: l.message_count || 0, source: '', last: l.last_active || 0 })
     else if (zedDrafts.has(id)) {
-      // a chat started from Zen Mode, before its first prompt
+      // a chat started from Zed Mode, before its first prompt
       const d = zedDrafts.get(id)
       byId.set(id, { id, title: l.title || 'New chat', preview: d.cwd ? `in ${folderName(d.cwd)}` : '', message_count: 0, source: '', last: l.last_active || d.at })
     }
@@ -2700,7 +2700,7 @@ function ZedView({ inline = false }) {
       }
     })
     .sort((a, b) => STATE_RANK[a.state] - STATE_RANK[b.state] || b.last - a.last)
-  const items = cards.length ? cards : [{ key: 'empty', ghost: true, title: loading ? 'Loading…' : 'No sessions yet', preview: loading ? '' : 'Start a chat, then come back to Zen Mode.' }]
+  const items = cards.length ? cards : [{ key: 'empty', ghost: true, title: loading ? 'Loading…' : 'No sessions yet', preview: loading ? '' : 'Start a chat, then come back to Zed Mode.' }]
   const sel = Math.max(0, cards.findIndex(c => c.id === selId))
   const cur = cards[sel]
   const counts = STATES.filter(s => s.sum).map(s => ({ ...s, n: cards.filter(c => c.state === s.key).length })).filter(s => s.n)
@@ -2856,8 +2856,8 @@ function ZedView({ inline = false }) {
         {
           className: 'hstk-crumbs',
           children: held
-            ? [jsx('button', { onClick: release, children: 'Zen Mode' }, 'z'), jsx('span', { children: '›' }, 's'), jsx('span', { className: 'cur', children: heldCard?.title || 'session' }, 'c')]
-            : [jsx('b', { children: 'Zen Mode' }, 'z')]
+            ? [jsx('button', { onClick: release, children: 'Zed Mode' }, 'z'), jsx('span', { children: '›' }, 's'), jsx('span', { className: 'cur', children: heldCard?.title || 'session' }, 'c')]
+            : [jsx('b', { children: 'Zed Mode' }, 'z')]
         },
         'crumbs'
       ),
@@ -2892,7 +2892,7 @@ function ZedView({ inline = false }) {
       : jsx('span', { children: cards.length ? (cards[0].pinned ? 'All quiet · your pins are up front' : 'All quiet') : '' })
   })
   // ── where the stack sits ──
-  // Its own width as a share of the Zen Mode area (must match .hstk-stackin), then the dials, clamped:
+  // Its own width as a share of the Zed Mode area (must match .hstk-stackin), then the dials, clamped:
   // on its own it stays on screen; beside a thread it can never reach under the thread's left edge.
   const widthPct = Math.min(700 / box.w, 0.5) * 100
   const clamp = (v, a, b) => Math.min(Math.max(v, Math.min(a, b)), Math.max(a, b))
@@ -3044,8 +3044,8 @@ function registerTitlebarToggle(ctx) {
       area: TITLEBAR_TOOLS_RIGHT,
       order: 10,
       data: {
-        id: 'zen-mode-zed',
-        label: on ? 'Exit Zen Mode (⌘⌥Z)' : 'Zen Mode (⌘⌥Z)',
+        id: 'zedmode-zed',
+        label: on ? 'Exit Zed Mode (⌘⌥Z)' : 'Zed Mode (⌘⌥Z)',
         active: on,
         icon: jsx(Codicon, { name: on ? 'layers-active' : 'layers', size: '13.9px', className: 'leading-none' }),
         onSelect: toggleZed
@@ -3059,21 +3059,21 @@ function registerTitlebarToggle(ctx) {
 
 export default {
   id: ID,
-  name: 'Zen Mode',
+  name: 'Zed Mode',
   register(ctx) {
     CTX = ctx
     setTune(ctx.storage?.get?.('tune', {}) || {}, { persist: false }) // your saved dials
     registerTitlebarToggle(ctx)
 
-    // The same tuning panel as a user-facing page: Settings → Plugins → Zen Mode.
+    // The same tuning panel as a user-facing page: Settings → Plugins → Zed Mode.
     ctx.registerSettingsPage?.({
       id: 'zed',
-      title: 'Zen Mode',
+      title: 'Zed Mode',
       icon: 'layers',
       render: () => jsx('div', { className: 'hstk', style: { padding: 4 }, children: [jsx('style', { children: CSS }, 'css'), jsx(TunePanel, { embedded: true }, 'p')] })
     })
 
-    // Failures: watched for the whole time the app is open, not only while Zen Mode is on screen,
+    // Failures: watched for the whole time the app is open, not only while Zed Mode is on screen,
     // so the stack is right the moment you come back to it. Kept for a day across reloads.
     failed.clear()
     for (const [sid, f] of Object.entries(ctx.storage?.get?.('failed', {}) || {})) if (f?.at > Date.now() - 86_400_000) failed.set(sid, f)
@@ -3084,18 +3084,18 @@ export default {
 
     ctx.registerMany([
       { id: 'page', area: ROUTES_AREA, data: { path: ROUTE }, render: () => jsx(ZedView, {}) },
-      { id: 'nav', area: SIDEBAR_NAV_AREA, data: { path: ROUTE, label: 'Zen Mode', codicon: 'layers' } },
+      { id: 'nav', area: SIDEBAR_NAV_AREA, data: { path: ROUTE, label: 'Zed Mode', codicon: 'layers' } },
       {
         id: 'open',
         area: PALETTE_AREA,
-        data: { id: 'zen-mode.toggle-zed', label: 'Zen Mode: Toggle', keywords: ['zen', 'zed', 'stack', 'sessions', 'inbox', 'pinned'], run: toggleZed }
+        data: { id: 'zedmode.toggle-zed', label: 'Zed Mode: Toggle', keywords: ['zed', 'stack', 'sessions', 'inbox', 'pinned'], run: toggleZed }
       },
       {
         id: 'toggle',
         area: KEYBINDS_AREA,
-        data: { id: 'zen-mode.toggle-zed', label: 'Zen Mode: Toggle', category: 'Zen Mode', defaults: ['mod+alt+z'], run: toggleZed }
+        data: { id: 'zedmode.toggle-zed', label: 'Zed Mode: Toggle', category: 'Zed Mode', defaults: ['mod+alt+z'], run: toggleZed }
       },
-      { id: 'directive', area: TRANSCRIPT_DIRECTIVE_AREA, data: { name: 'zen-mode', render: () => jsx(ZedView, { inline: true }) } }
+      { id: 'directive', area: TRANSCRIPT_DIRECTIVE_AREA, data: { name: 'zedmode', render: () => jsx(ZedView, { inline: true }) } }
     ])
   }
 }

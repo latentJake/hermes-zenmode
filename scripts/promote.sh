@@ -10,8 +10,8 @@ REPO="$(cd "$(dirname "$0")/.." && pwd)"
 CAND="${1:?usage: promote.sh <candidate plugin.js>}"
 T="$REPO/desktop/.plugin.js.next"
 
-cp "$CAND" "${TMPDIR:-/tmp}/zen-mode-cand.mjs"
-node --check "${TMPDIR:-/tmp}/zen-mode-cand.mjs"
+cp "$CAND" "${TMPDIR:-/tmp}/zedmode-cand.mjs"
+node --check "${TMPDIR:-/tmp}/zedmode-cand.mjs"
 if grep -E "^import .* from ['\"]" "$CAND" | grep -vqE "from ['\"](@hermes/plugin-sdk|react|react/jsx-runtime)['\"]"; then
   echo "✗ disallowed import"; exit 1
 fi

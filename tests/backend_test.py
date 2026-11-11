@@ -14,9 +14,9 @@ from fastapi.testclient import TestClient  # noqa: E402
 import plugin_api  # noqa: E402
 
 app = FastAPI()
-app.include_router(plugin_api.router, prefix="/api/plugins/zen-mode")
+app.include_router(plugin_api.router, prefix="/api/plugins/zedmode")
 c = TestClient(app)
-P = "/api/plugins/zen-mode"
+P = "/api/plugins/zedmode"
 fails = 0
 
 

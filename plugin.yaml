@@ -1,5 +1,5 @@
-name: zen-mode
+name: zedmode
 version: "0.19.0"
-description: "Zen Mode for Hermes Desktop: every conversation in one stack that recedes into the screen, ordered like an inbox (failed, needs you, working, unread, pinned). Answer approvals on the card, hold a thread beside the stack, switch its model, tune the 3D live."
+description: "Zed Mode for Hermes Desktop: every conversation in one stack that recedes into the screen, ordered like an inbox (failed, needs you, working, unread, pinned). Answer approvals on the card, hold a thread beside the stack, switch its model, tune the 3D live."
 author: latentJake
 requires_hermes: ">=0.23.0"

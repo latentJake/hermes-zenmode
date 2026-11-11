@@ -19,9 +19,9 @@ cd hermes-zenmode
 
 | Step | Result |
 |---|---|
-| Links `desktop/` to `~/.hermes/desktop-plugins/zen-mode` | The app loads `plugin.js` (the UI) |
-| Links the repo to `~/.hermes/plugins/zen-mode` | The gateway finds `dashboard/plugin_api.py` (pins and stored transcripts) |
-| Adds `- zen-mode` under `plugins.enabled` in `~/.hermes/config.yaml` | Allows that Python to run. Your previous file is saved as `config.yaml.bak-zen-mode` |
+| Links `desktop/` to `~/.hermes/desktop-plugins/zedmode` | The app loads `plugin.js` (the UI) |
+| Links the repo to `~/.hermes/plugins/zedmode` | The gateway finds `dashboard/plugin_api.py` (pins and stored transcripts) |
+| Adds `- zedmode` under `plugins.enabled` in `~/.hermes/config.yaml` | Allows that Python to run. Your previous file is saved as `config.yaml.bak-zedmode` |
 
 Options:
 
@@ -50,12 +50,12 @@ The full key list is in [keybinds.md](keybinds.md).
 
 | You see | Do this |
 |---|---|
-| No Zen Mode icon or command after install | **Capabilities → Plugins** → make sure **Zen Mode** is on; then **⌘K → Reload desktop plugins**. A load error appears as a toast and in `~/.hermes/logs/desktop.log` |
-| "Backend off", no pins | **Capabilities → Plugins → Rescan**, or quit and reopen Hermes. Check `zen-mode` is under `plugins.enabled` in `~/.hermes/config.yaml` |
+| No Zed Mode icon or command after install | **Capabilities → Plugins** → make sure **Zed Mode** is on; then **⌘K → Reload desktop plugins**. A load error appears as a toast and in `~/.hermes/logs/desktop.log` |
+| "Backend off", no pins | **Capabilities → Plugins → Rescan**, or quit and reopen Hermes. Check `zedmode` is under `plugins.enabled` in `~/.hermes/config.yaml` |
 | A non-live conversation says its transcript needs the backend | The gateway hasn't loaded the plugin's backend yet. The thread offers **Restart gateway**; this interrupts any reply in progress |
-| ⌘⌥Z does nothing | Another app may own the shortcut. Rebind it in Hermes settings (it is registered as "Zen Mode: Toggle"), or use the titlebar icon or ⌘K |
+| ⌘⌥Z does nothing | Another app may own the shortcut. Rebind it in Hermes settings (it is registered as "Zed Mode: Toggle"), or use the titlebar icon or ⌘K |
 | The model menu offers a model that then fails | The reason appears under the model pill (usually a provider that isn't connected); **Connect provider…** opens Settings → Providers |
-| A conversation won't take a message | It isn't live. Zen Mode keeps your text; use **Open** to continue it in Hermes |
+| A conversation won't take a message | It isn't live. Zed Mode keeps your text; use **Open** to continue it in Hermes |
 
 ## Update
 
@@ -69,7 +69,7 @@ when it changes; the backend reloads `zed_backend.py` on the next request. With 
 ./scripts/uninstall.sh
 ```
 
-This removes the two links and the skill, and takes `- zen-mode` out of `plugins.enabled`
+This removes the two links and the skill, and takes `- zedmode` out of `plugins.enabled`
 (again saving a backup). Then **⌘K → Reload desktop plugins**. Your Hermes data is never touched.
-Zen Mode's own settings (tuning, presets) live in the app's plugin storage, and its card cache is
-`~/.hermes/plugin-data/zen-mode/cache.db`; both are left behind harmlessly and can be deleted.
+Zed Mode's own settings (tuning, presets) live in the app's plugin storage, and its card cache is
+`~/.hermes/plugin-data/zedmode/cache.db`; both are left behind harmlessly and can be deleted.

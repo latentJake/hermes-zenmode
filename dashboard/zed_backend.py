@@ -1,6 +1,6 @@
-"""Zen Mode backend logic (reloaded on change by plugin_api.py — no gateway restart needed).
+"""Zed Mode backend logic (reloaded on change by plugin_api.py — no gateway restart needed).
 
-Mounted by the gateway at /api/plugins/zen-mode/ once `zen-mode` is in
+Mounted by the gateway at /api/plugins/zedmode/ once `zedmode` is in
 `plugins.enabled` (config.yaml). The desktop half calls it with ctx.rest('/zed').
 
 Data rules (docs/architecture.md, "The data half"):
@@ -89,7 +89,7 @@ def _card(r: dict) -> dict:
 
 
 async def health() -> dict:
-    return {"plugin": "zen-mode", "status": "ok", "version": VERSION}
+    return {"plugin": "zedmode", "status": "ok", "version": VERSION}
 
 
 async def zed(recent: int = 3, folders: int = 3, pinned: int = 12) -> dict:
@@ -98,7 +98,7 @@ async def zed(recent: int = 3, folders: int = 3, pinned: int = 12) -> dict:
     rows = [r for r in _rows() if r["source"].lower() not in deny]
 
     pinned_cards = [_card(r) for r in rows if r["pinned"]][:pinned]
-    all_cards = [_card(r) for r in rows]  # the whole history, newest first: the back of the Zen Mode stack
+    all_cards = [_card(r) for r in rows]  # the whole history, newest first: the back of the Zed Mode stack
 
     # Most recent unique conversations from the last 7 days (pins excluded: they have their own stack).
     cutoff, seen, recent_cards = time.time() - WEEK, set(), []
@@ -145,7 +145,7 @@ async def zed(recent: int = 3, folders: int = 3, pinned: int = 12) -> dict:
     }
 
 
-# ── "hold" views: Shift+Return in Zen Mode zooms into a card without leaving Zen Mode ──
+# ── "hold" views: Shift+Return in Zed Mode zooms into a card without leaving Zed Mode ──
 
 def _text(content) -> str:
     """Message content as plain text (content can be a string or a list of parts)."""
@@ -185,7 +185,7 @@ def _arg_preview(raw) -> str:
 async def session(id: str, turns: int = 40) -> dict:
     """One conversation as TURNS (a user message + everything until the next user message),
     newest last. Each turn keeps its STEPS in order: assistant text and tool calls
-    (name + a one-line argument preview), so Zen Mode can show what the agent did between prompts."""
+    (name + a one-line argument preview), so Zed Mode can show what the agent did between prompts."""
     from hermes_state import SessionDB
 
     turns = max(1, min(200, int(turns)))
@@ -262,7 +262,7 @@ def _prompt_line(content) -> str:
 
 
 async def prompts(ids: str, n: int = 6) -> dict:
-    """The latest user prompts of each conversation, newest first: what a Zen Mode card lists.
+    """The latest user prompts of each conversation, newest first: what a Zed Mode card lists.
     `n` is the prompt's number within its conversation. Read straight from state.db, read-only."""
     n = max(1, min(20, int(n)))
     wanted = [i for i in (ids or "").split(",") if i][:40]
@@ -314,12 +314,12 @@ _mem_cache: dict[str, tuple[str, dict]] = {}
 
 
 def _cache_db():
-    """Our own small cache (never Hermes' files): $HERMES_HOME/plugin-data/zen-mode/cache.db.
+    """Our own small cache (never Hermes' files): $HERMES_HOME/plugin-data/zedmode/cache.db.
     Returns None if it can't be opened; the in-memory cache still works then."""
     import sqlite3
 
     try:
-        d = _home() / "plugin-data" / "zen-mode"
+        d = _home() / "plugin-data" / "zedmode"
         d.mkdir(parents=True, exist_ok=True)
         con = sqlite3.connect(d / "cache.db", timeout=2)
         con.execute("PRAGMA journal_mode = WAL")
@@ -407,7 +407,7 @@ def _derive(con, sid: str) -> dict:
 
 
 async def glance(ids: str) -> dict:
-    """What a Zen Mode card shows, for up to 40 conversations in one call.
+    """What a Zed Mode card shows, for up to 40 conversations in one call.
     Session facts come straight from the session row (one query for all ids). Transcript-derived
     facts come from the cache unless that conversation changed since they were computed."""
     import json
@@ -493,7 +493,7 @@ def _route(fn):
     return call
 
 
-# Routes the dispatcher in plugin_api.py exposes: GET /api/plugins/zen-mode/<name>
+# Routes the dispatcher in plugin_api.py exposes: GET /api/plugins/zedmode/<name>
 route_health, route_zed, route_session, route_folder, route_prompts, route_glance = map(
     _route, (health, zed, session, folder, prompts, glance)
 )
@@ -502,12 +502,12 @@ route_health, route_zed, route_session, route_folder, route_prompts, route_glanc
 async def resolve(model: str, provider: str = "", current_model: str = "", current_provider: str = "") -> dict:
     """Run Hermes' own model resolver for a pick and say WHY it fails. The owner's model mutation
     answers only `model_resolution_failed`; this is the same `switch_model` call it makes, against
-    the same profile config, so Zen Mode can show the real reason (no credentials, server down, …)."""
+    the same profile config, so Zed Mode can show the real reason (no credentials, server down, …)."""
     import asyncio
 
     # The one private seam this plugin leans on (disclosed in the README): the resolver is the only
     # place Hermes says WHY a model cannot be used. If it moves or changes shape, the answer is
-    # "unknown" (`error`), never "not usable", and Zen Mode falls back to the gateway's own short reason.
+    # "unknown" (`error`), never "not usable", and Zed Mode falls back to the gateway's own short reason.
     try:
         from hermes_cli.config import get_compatible_custom_providers, load_config
         from hermes_cli.model_switch import switch_model
@@ -534,7 +534,7 @@ async def usable(pairs: str, current_model: str = "", current_provider: str = ""
     """Which of these providers can actually be switched to right now? `pairs` is a JSON list of
     [provider slug, one of its model ids]. Each is run through Hermes' own resolver (see `resolve`);
     a verdict is remembered for a minute. Used to keep providers whose login is missing out of
-    the Zen Model menu, even when the catalog lists them as connected."""
+    the Zed Model menu, even when the catalog lists them as connected."""
     import json
 
     try:

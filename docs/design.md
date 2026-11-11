@@ -1,6 +1,6 @@
 # Design
 
-Zen Mode treats the screen as a window you look *through*: your conversations sit in one
+Zed Mode treats the screen as a window you look *through*: your conversations sit in one
 stack that recedes into it, and the one that needs you is at the front. These are the rules
 the interface follows, so anything added later should follow them too.
 
@@ -16,7 +16,7 @@ the interface follows, so anything added later should follow them too.
    edge colour (red failed, amber needs you, green unread, dashed for a process still running),
    the app's running arc while it works, an accent top edge for a pin, and the state named in
    its title strip. The colours and the arc are the app's own, so nothing has to be learned twice.
-4. **One stack, ordered like an inbox.** Zen Mode opens on the front of a single stack: failed, needs
+4. **One stack, ordered like an inbox.** Zed Mode opens on the front of a single stack: failed, needs
    you, working, process running, unread, pinned, then everything else. A clean slate shows
    your pins. No index page, no quadrants, no second view.
 5. **Prompts are chapters.** A user's input is the landmark: sticky at the top of its chapter,
@@ -45,5 +45,5 @@ Every number that shapes the feel is a live dial; see [tuning.md](tuning.md).
 ## Future work
 
 Head tracking (a pose stream could drive `perspective-origin`), a metadata callout line,
-scroll detents with haptics, and type to filter. Zen Mode deliberately has no glass effects of
+scroll detents with haptics, and type to filter. Zed Mode deliberately has no glass effects of
 its own: it follows the Hermes app's design system.

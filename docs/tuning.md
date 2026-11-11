@@ -1,7 +1,7 @@
 # Tuning
 
-Every number that shapes how Zen Mode feels (depth, curve, motion, where things sit) is a live dial.
-Press **`** in Zen Mode, or click **Tune** in the header, or use **Settings → Plugins → Zen Mode**.
+Every number that shapes how Zed Mode feels (depth, curve, motion, where things sit) is a live dial.
+Press **`** in Zed Mode, or click **Tune** in the header, or use **Settings → Plugins → Zed Mode**.
 Changes apply immediately and are saved.
 
 The defaults are a starting point, not a verdict: nothing here has been tuned across displays.
@@ -100,8 +100,8 @@ toggle on to get a PAPER / FLAT switch on a held thread. It is off by default.
 
 ## Where the values live
 
-- Saved in the app's plugin storage (`hermes.plugin.zen-mode.tune`, only the differences).
+- Saved in the app's plugin storage (`hermes.plugin.zedmode.tune`, only the differences).
   Presets are stored beside it.
-- The CSS reads each dial as `--hz-<key>` on the Zen Mode root; hot JavaScript paths read `tune.<key>`.
+- The CSS reads each dial as `--hz-<key>` on the Zed Mode root; hot JavaScript paths read `tune.<key>`.
 - To add a dial, add a row to the `TUNE` table at the top of `desktop/plugin.js`; it then appears in
   the panel, in presets and in share codes automatically.

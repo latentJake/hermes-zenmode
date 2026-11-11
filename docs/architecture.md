@@ -1,6 +1,6 @@
 # Architecture
 
-How Zen Mode works, for someone reading or changing the code. Written for **0.19.0**; read it
+How Zed Mode works, for someone reading or changing the code. Written for **0.19.0**; read it
 next to `desktop/plugin.js` and `dashboard/zed_backend.py`. What it depends on in Hermes, and how
 each dependency fails, is in [compatibility.md](compatibility.md).
 
@@ -8,9 +8,9 @@ each dependency fails, is in [compatibility.md](compatibility.md).
 
 ```
 ┌─ Hermes desktop app (Electron renderer) ─────────────────────────────────────────────┐
-│  desktop/plugin.js          loaded from ~/.hermes/desktop-plugins/zen-mode        │
-│    register(ctx): titlebar tool · #/zen-mode page · sidebar entry · ⌘K · ⌘⌥Z      │
-│                   ::zen-mode{} directive · Settings → Plugins → Zen Mode      │
+│  desktop/plugin.js          loaded from ~/.hermes/desktop-plugins/zedmode        │
+│    register(ctx): titlebar tool · #/zedmode page · sidebar entry · ⌘K · ⌘⌥Z      │
+│                   ::zedmode{} directive · Settings → Plugins → Zed Mode      │
 │    ZedView: one stack of every conversation, most urgent first                        │
 │             ⇧⏎ hold → the stack steps aside, a Thread floats in beside it             │
 │                                                                                       │
@@ -23,7 +23,7 @@ each dependency fails, is in [compatibility.md](compatibility.md).
 │       prompt.submit · image.attach_bytes · file.attach · config.set · …               │
 │  events: message.start/delta/complete · tool.start/complete · session.info            │
 │                                                                                       │
-│  /api/plugins/zen-mode/<name>                                                     │
+│  /api/plugins/zedmode/<name>                                                     │
 │    dashboard/plugin_api.py   imported ONCE, then a stable dispatcher                  │
 │      └─ dashboard/zed_backend.py   re-imported whenever its mtime changes             │
 │           read-only: SessionDB → ~/.hermes/state.db                                   │
@@ -51,12 +51,12 @@ survives app restarts.
 `plugin.js` is organised in bands; search for the `// ──` headers.
 
 1. **Tune.** The feel-dials live in one `TUNE` table, held in a tiny external store (`tune`,
-   `setTune`, `useTune`). They reach CSS as `--hz-*` variables on the Zen Mode root, and hot JS paths
+   `setTune`, `useTune`). They reach CSS as `--hz-*` variables on the Zed Mode root, and hot JS paths
    read `tune.x` directly. Persisted as a diff from defaults in the plugin's storage.
    See [tuning.md](tuning.md).
-2. **Enter / exit.** Zen Mode is a **route** (`#/zen-mode`), not an overlay. Entering remembers the
+2. **Enter / exit.** Zed Mode is a **route** (`#/zedmode`), not an overlay. Entering remembers the
    hash you came from; leaving navigates back. A short eased transition runs first (a dial; off
-   with reduced motion). Zen Mode always opens on the front of the stack.
+   with reduced motion). Zed Mode always opens on the front of the stack.
 3. **Data hooks**, all through the app's shared React Query client, so the page, the directive and
    every thread share one cache entry per key:
 
@@ -88,7 +88,7 @@ survives app restarts.
    Placement is a transform clamped from the measured pane (`ResizeObserver`); below a width
    threshold a held thread fills the pane instead of sitting beside the stack.
 7. **Threads** (`useThread`, `Thread`, `Rail`, `Composer`). One hook owns data, scroll, the current
-   chapter (one user prompt plus everything until the next) and a small keyboard API Zen Mode drives.
+   chapter (one user prompt plus everything until the next) and a small keyboard API Zed Mode drives.
    Performance rules that matter: chapters are memoised with stable callbacks; scroll is measured
    at most once per frame using layout offsets and a binary search. Break these and scrolling
    jitters.
@@ -134,7 +134,7 @@ Rules the backend keeps:
 - **Read-only.** Hermes' databases are opened with `mode=ro` plus `PRAGMA query_only` and bound
   parameters; a test proves a write is refused. All writes the plugin performs go through the
   gateway's own RPC. The only file the backend writes is its own cache,
-  `$HERMES_HOME/plugin-data/zen-mode/cache.db`.
+  `$HERMES_HOME/plugin-data/zedmode/cache.db`.
 - **Use what Hermes stores.** Listings come from `SessionDB.list_sessions_rich`, the sidebar's own
   query, so branches, compression segments and pins match.
 - **Routes accept only the parameters they declare.** The app appends its own (e.g. `profile`) to

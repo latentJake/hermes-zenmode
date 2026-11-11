@@ -67,7 +67,7 @@ Before calling a change done, look at it in Hermes. The list that matters:
 
 ## Writing your own desktop plugin from this one
 
-Zen Mode is a working example of a desktop plugin with a Python backend. To start your own:
+Zed Mode is a working example of a desktop plugin with a Python backend. To start your own:
 
 1. **Copy** the repo and `rm -rf .git`. Rename in four places and keep them identical: the `ID`
    constant in `desktop/plugin.js`, the folder name used by `scripts/install.sh` and
